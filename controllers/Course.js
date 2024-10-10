@@ -4,7 +4,6 @@ const User = require("../models/User");
 const Section = require("../models/Section");
 const SubSection = require("../models/SubSection");
 const CourseProgress = require("../models/CourseProgress");
-// const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 const {
   uploadImageToCloudinary,
@@ -12,7 +11,7 @@ const {
 } = require("../utils/imageUploader");
 const { convertSecondsToDuration } = require("../utils/secToDuration");
 
-//handler function of createCourse
+// ================ create new course ================
 exports.createCourse = async (req, res) => {
   try {
     //fetch data
@@ -22,16 +21,16 @@ exports.createCourse = async (req, res) => {
       whatYouWillLearn,
       price,
       category,
-      // instructions: _instructions,
-      instructions,
+      instructions: _instructions,
+      // instructions,
       status,
-      // tag: _tag,
-      tag,
+      tag: _tag,
+      // tag,
     } = req.body;
 
     // Convert the tag and instructions from stringified Array to Array
-    // const tag = JSON.parse(_tag);
-    // const instructions = JSON.parse(_instructions);
+    const tag = JSON.parse(_tag);
+    const instructions = JSON.parse(_instructions);
 
     // let tag, instructions;
     // try {
@@ -50,7 +49,7 @@ exports.createCourse = async (req, res) => {
     // console.log("tag = ", tag)
     // console.log("instructions = ", instructions)
 
-    //get thumbnail
+    //get thumbnail of course
     // const thumbnail = req.files?.thumbnailImage;
 
     //validation

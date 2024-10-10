@@ -18,7 +18,7 @@ const otpSchema = new mongoose.Schema({
   },
 });
 
-//a function -> to send emails
+// function to send email
 async function sendVerificationEmail(email, otp) {
   try {
     const mailResponse = await mailSender(
@@ -31,10 +31,12 @@ async function sendVerificationEmail(email, otp) {
   } catch (error) {
     console.log("Error occurred while sending email to", email);
     console.log(error);
-    throw error;
+    throw new error();
+    // throw error;
   }
 }
 
+// pre middleware
 otpSchema.pre("save", async function (next) {
   // console.log("New document saved to database");
 

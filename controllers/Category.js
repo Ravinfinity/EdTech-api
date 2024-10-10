@@ -5,7 +5,7 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-//Handler function to create category
+// ================ create Category ================
 exports.createCategory = async (req, res) => {
   try {
     //fetch data
@@ -24,7 +24,7 @@ exports.createCategory = async (req, res) => {
       name: name,
       description: description,
     });
-    console.log(categoryDetails);
+    // console.log(categoryDetails);
 
     //return response
     return res.status(200).json({
@@ -42,7 +42,7 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-// Handler function to delete category
+// ================ delete Category ================
 exports.deleteCategory = async (req, res) => {
   try {
     // extract data
@@ -73,7 +73,7 @@ exports.deleteCategory = async (req, res) => {
   }
 };
 
-//Handler function to get all categories
+// ================ get All Category ================
 exports.showAllCategories = async (req, res) => {
   try {
     // get all category from DB
@@ -89,7 +89,7 @@ exports.showAllCategories = async (req, res) => {
       message: "All Categories fetched successfully",
     });
   } catch (error) {
-    console.log("Error while fetching all allCategories");
+    console.log("Error while fetching all Categories");
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -98,13 +98,12 @@ exports.showAllCategories = async (req, res) => {
   }
 };
 
-//Pending--------------------------------------
-
-//handler function to get categoryPageDetails
+// ================ Get Category Page Details ================
 exports.getCategoryPageDetails = async (req, res) => {
   try {
     //get categoryId
     const { categoryId } = req.body;
+    // console.log("PRINTING CATEGORY ID: ", categoryId);
 
     //get courses for specified categoryId
     const selectedCategory = await Category.findById(categoryId)
@@ -168,12 +167,12 @@ exports.getCategoryPageDetails = async (req, res) => {
       })
       .exec();
 
-    const allCourses = allCategories.flatMap((category) => category.course);
+    const allCourses = allCategories.flatMap((category) => category.courses);
     const mostSellingCourses = allCourses
       .sort((a, b) => b.sold - a.sold)
       .slice(0, 10);
 
-    console.log("mostSellingCourses: ", mostSellingCourses);
+    // console.log("mostSellingCourses: ", mostSellingCourses);
     res.status(200).json({
       success: true,
       data: {
