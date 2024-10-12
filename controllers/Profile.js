@@ -164,11 +164,11 @@ exports.getUserDetails = async (req, res) => {
 // ================ Update User profile Image ================
 exports.updateUserProfileImage = async (req, res) => {
   try {
-    const profileImage = req.file?.profileImage;
+    const profileImage = req.files?.profileImage;
     const userId = req.user.id;
 
     // validation
-    // console.log("profileImage = ", profileImage);
+    console.log("profileImage = ", profileImage);
 
     // upload image to cloudinary
     const image = await uploadImageToCloudinary(
@@ -178,7 +178,7 @@ exports.updateUserProfileImage = async (req, res) => {
       1000
     );
 
-    // console.log('image url - ', image);
+    // console.log("image url - ", image);
 
     // update in DB
     const updatedUserDetails = await User.findByIdAndUpdate(
