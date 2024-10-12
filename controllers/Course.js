@@ -22,15 +22,15 @@ exports.createCourse = async (req, res) => {
       price,
       category,
       instructions: _instructions,
-      // instructions,
+      instructions,
       status,
       tag: _tag,
-      // tag,
+      tag,
     } = req.body;
 
     // Convert the tag and instructions from stringified Array to Array
-    const tag = JSON.parse(_tag);
-    const instructions = JSON.parse(_instructions);
+    // const tag = JSON.parse(_tag);
+    // const instructions = JSON.parse(_instructions);
 
     // let tag, instructions;
     // try {
@@ -46,11 +46,13 @@ exports.createCourse = async (req, res) => {
     //   });
     // }
 
+    console.log("hi there");
+
     // console.log("tag = ", tag)
     // console.log("instructions = ", instructions)
 
     //get thumbnail of course
-    // const thumbnail = req.files?.thumbnailImage;
+    const thumbnail = req.files?.thumbnailImage;
 
     //validation
     if (
@@ -59,6 +61,7 @@ exports.createCourse = async (req, res) => {
       !whatYouWillLearn ||
       !price ||
       !category ||
+      !thumbnail ||
       !instructions.length ||
       !tag.length
     ) {
@@ -99,10 +102,10 @@ exports.createCourse = async (req, res) => {
     }
 
     //Upload thumbnail image to cloudinary
-    // const thumbnailDetails = await uploadImageToCloudinary(
-    //   thumbnail,
-    //   process.env.FOLDER_NAME
-    // );
+    const thumbnailDetails = await uploadImageToCloudinary(
+      thumbnail,
+      process.env.FOLDER_NAME
+    );
 
     //create an entry for new course in DB
     const newCourse = await Course.create({
@@ -115,7 +118,7 @@ exports.createCourse = async (req, res) => {
       tag,
       status,
       instructions,
-      // thumbnail: thumbnailDetails.secure_url,
+      thumbnail: thumbnailDetails.secure_url,
       createdAt: Date.now(),
     });
 
@@ -148,7 +151,7 @@ exports.createCourse = async (req, res) => {
       data: newCourse,
     });
   } catch (error) {
-    console.log("Error while creating new course");
+    // console.log("Error while creating new course");
     console.log(error);
     return res.status(500).json({
       success: false,
