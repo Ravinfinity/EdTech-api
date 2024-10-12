@@ -6,20 +6,14 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 exports.createSubSection = async (req, res) => {
   try {
     //fetch data from req body
-    const { sectionId, title, timeDuration, description } = req.body;
+    const { sectionId, title, description } = req.body;
 
     //extract file/video
-    // const videoFile = req.files.video;
-    // console.log('videoFile ', videoFile)
+    const videoFile = req.files?.videoFile;
+    console.log("videoFile ", videoFile);
 
     //validation
-    // if (!sectionId || !title || !timeDuration || !description || !videoFile) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "All fields are required",
-    //   });
-    // }
-    if (!sectionId || !title || !timeDuration || !description) {
+    if (!sectionId || !title || !description || !videoFile) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -27,20 +21,19 @@ exports.createSubSection = async (req, res) => {
     }
 
     //upload video to cloudinary
-    // const videoFileDetails = await uploadImageToCloudinary(
-    //   videoFile,
-    //   process.env.FOLDER_NAME
-    // );
+    const videoFileDetails = await uploadImageToCloudinary(
+      videoFile,
+      process.env.FOLDER_NAME
+    );
 
     //create a subsection entry in DB
     const SubSectionDetails = await SubSection.create({
-      // title: title,
       title,
-      // timeDuration: videoFileDetails.duration,
+      timeDuration: videoFileDetails.duration,
       // timeDuration: timeDuration,
-      timeDuration,
+      // timeDuration,
       description,
-      // videoUrl: videoFileDetails.secure_url,
+      videoUrl: videoFileDetails.secure_url,
     });
 
     // update section with this subsection ObjectId
@@ -102,15 +95,15 @@ exports.updateSubSection = async (req, res) => {
     }
 
     // upload video to cloudinary
-    // if (req.files && req.files.videoFile !== undefined) {
-    //   const video = req.files.videoFile;
-    //   const uploadDetails = await uploadImageToCloudinary(
-    //     video,
-    //     process.env.FOLDER_NAME
-    //   );
-    //   subSection.videoUrl = uploadDetails.secure_url;
-    //   subSection.timeDuration = uploadDetails.duration;
-    // }
+    if (req.files && req.files.videoFile !== undefined) {
+      const video = req.files.videoFile;
+      const uploadDetails = await uploadImageToCloudinary(
+        video,
+        process.env.FOLDER_NAME
+      );
+      subSection.videoUrl = uploadDetails.secure_url;
+      subSection.timeDuration = uploadDetails.duration;
+    }
 
     // save data to DB
     await subSection.save();
