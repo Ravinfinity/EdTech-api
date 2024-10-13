@@ -22,17 +22,17 @@ exports.createCourse = async (req, res) => {
       price,
       category,
       instructions: _instructions,
-      instructions,
+      // instructions,
       status,
       tag: _tag,
-      tag,
+      // tag,
     } = req.body;
 
     // Convert the tag and instructions from stringified Array to Array
-    // const tag = JSON.parse(_tag);
-    // const instructions = JSON.parse(_instructions);
+    const tag = JSON.parse(_tag);
+    const instructions = JSON.parse(_instructions);
 
-    // let tag, instructions;
+    // // let tag, instructions;
     // try {
     //   tag = Array.isArray(_tag) ? _tag : JSON.parse(_tag);
     //   instructions = Array.isArray(_instructions)
@@ -46,7 +46,7 @@ exports.createCourse = async (req, res) => {
     //   });
     // }
 
-    console.log("hi there");
+    // console.log("hi there");
 
     // console.log("tag = ", tag)
     // console.log("instructions = ", instructions)
