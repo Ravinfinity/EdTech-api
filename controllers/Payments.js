@@ -14,7 +14,7 @@ require("dotenv").config();
 //capture the payment and initiate the Razorpay order
 exports.capturePayment = async (req, res) => {
   // extract courseId & userId
-  const { courseId } = req.body;
+  const { coursesId } = req.body;
   // console.log('coursesId = ', typeof (coursesId))
   // console.log('coursesId = ', coursesId)
 
@@ -22,7 +22,7 @@ exports.capturePayment = async (req, res) => {
 
   //validation
   //check valid courseId
-  if (!courseId) {
+  if (!coursesId.length == 0) {
     return res.json({
       success: false,
       message: "Please provide valid course ID",
@@ -82,76 +82,76 @@ exports.capturePayment = async (req, res) => {
   }
 };
 
-// //handler function for verify signature of razorpay and server
-// exports.verifySignature = async (req, res) => {
-//   const webhookSecret = "12345678";
+//handler function for verify signature of razorpay and server
+exports.verifySignature = async (req, res) => {
+  const webhookSecret = "12345678";
 
-//   const signature = req.header["x-razorpay-signature"];
+  const signature = req.header["x-razorpay-signature"];
 
-//   const shasum = crypto.createHmac("sha256", webhookSecret);
-//   shasum.update(JSON.stringify(req.body));
-//   const digest = shasum.digest("hex");
-//   //what is checksum?
+  const shasum = crypto.createHmac("sha256", webhookSecret);
+  shasum.update(JSON.stringify(req.body));
+  const digest = shasum.digest("hex");
+  //what is checksum?
 
-//   if (signature === digest) {
-//     console.log("Payment is Authorised");
+  if (signature === digest) {
+    console.log("Payment is Authorised");
 
-//     const { courseId, userId } = req.body.payload.payment.entity.notes;
+    const { courseId, userId } = req.body.payload.payment.entity.notes;
 
-//     try {
-//       //fulfil the action
-//       //find the course and enroll the student in it
-//       const enrolledCourse = await Course.findOneAndUpdate(
-//         { _id: courseId },
-//         { $push: { studentsEnrolled: userId } },
-//         { new: true }
-//       );
+    try {
+      //fulfil the action
+      //find the course and enroll the student in it
+      const enrolledCourse = await Course.findOneAndUpdate(
+        { _id: courseId },
+        { $push: { studentsEnrolled: userId } },
+        { new: true }
+      );
 
-//       if (!enrolledCourse) {
-//         return res.status(500).json({
-//           success: false,
-//           message: "Course not found",
-//         });
-//       }
+      if (!enrolledCourse) {
+        return res.status(500).json({
+          success: false,
+          message: "Course not found",
+        });
+      }
 
-//       console.log(enrolledCourse);
+      console.log(enrolledCourse);
 
-//       //find the student and the course to his list of enrolled courses
-//       const enrolledStudent = await user.findOneAndUpdate(
-//         { _id: userId },
-//         { $push: { courses: courseId } },
-//         { new: true }
-//       );
+      //find the student and the course to his list of enrolled courses
+      const enrolledStudent = await user.findOneAndUpdate(
+        { _id: userId },
+        { $push: { courses: courseId } },
+        { new: true }
+      );
 
-//       console.log(enrolledStudent);
+      console.log(enrolledStudent);
 
-//       //send the confirmation mail
-//       const emailResponse = await mailSender(
-//         enrolledStudent.email,
-//         "Congratulations from CodeHelp",
-//         "Congratulations, you are onboarded into new CodeHelp Course"
-//       );
+      //send the confirmation mail
+      const emailResponse = await mailSender(
+        enrolledStudent.email,
+        "Congratulations from CodeHelp",
+        "Congratulations, you are onboarded into new CodeHelp Course"
+      );
 
-//       console.log(emailResponse);
-//       return res.status(200).json({
-//         success: true,
-//         message: "Signature Verified and Course Added",
-//       });
-//     } catch (error) {
-//       console.log(error);
-//       return res.status(500).json({
-//         success: false,
-//         message: "Error while verifing rajorpay signature",
-//         error: error.message,
-//       });
-//     }
-//   } else {
-//     return res.status(400).json({
-//       success: false,
-//       message: "Invalid request",
-//     });
-//   }
-// };
+      console.log(emailResponse);
+      return res.status(200).json({
+        success: true,
+        message: "Signature Verified and Course Added",
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        success: false,
+        message: "Error while verifing rajorpay signature",
+        error: error.message,
+      });
+    }
+  } else {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid request",
+    });
+  }
+};
 
 // ================ verify the payment ================
 exports.verifyPayment = async (req, res) => {
