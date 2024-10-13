@@ -61,6 +61,9 @@ const courseSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
   },
+  totalDuration: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Course", courseSchema);

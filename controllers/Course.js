@@ -246,8 +246,10 @@ exports.getCourseDetails = async (req, res) => {
         totalDurationInSeconds += timeDurationInSeconds;
       });
     });
-
-    const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+    let totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+    courseDetails.totalDuration = convertSecondsToDuration(
+      totalDurationInSeconds
+    );
 
     //return response
     return res.status(200).json({
