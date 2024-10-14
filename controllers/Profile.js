@@ -216,7 +216,7 @@ exports.getEnrolledCourses = async (req, res) => {
         populate: {
           path: "courseContent",
           populate: {
-            path: "subSection",
+            path: "SubSection",
           },
         },
       })
@@ -224,14 +224,14 @@ exports.getEnrolledCourses = async (req, res) => {
 
     userDetails = userDetails.toObject();
 
-    var SubsectionLength = 0;
+    var SubSectionLength = 0;
     for (var i = 0; i < userDetails.courses.length; i++) {
       let totalDurationInSeconds = 0;
-      SubsectionLength = 0;
+      SubSectionLength = 0;
       for (var j = 0; j < userDetails.courses[i].courseContent.length; j++) {
         totalDurationInSeconds += userDetails.courses[i].courseContent[
           j
-        ].subSection.reduce(
+        ].SubSection.reduce(
           (acc, curr) => acc + parseInt(curr.timeDuration),
           0
         );
@@ -239,8 +239,8 @@ exports.getEnrolledCourses = async (req, res) => {
         userDetails.courses[i].totalDuration = convertSecondsToDuration(
           totalDurationInSeconds
         );
-        SubsectionLength +=
-          userDetails.courses[i].courseContent[j].subSection.length;
+        SubSectionLength +=
+          userDetails.courses[i].courseContent[j].SubSection.length;
       }
 
       let courseProgressCount = await CourseProgress.findOne({
@@ -250,14 +250,14 @@ exports.getEnrolledCourses = async (req, res) => {
 
       courseProgressCount = courseProgressCount?.completedVideos.length;
 
-      if (SubsectionLength === 0) {
+      if (SubSectionLength === 0) {
         userDetails.courses[i].progressPercentage = 100;
       } else {
         // To make it up to 2 decimal point
         const multiplier = Math.pow(10, 2);
         userDetails.courses[i].progressPercentage =
           Math.round(
-            (courseProgressCount / SubsectionLength) * 100 * multiplier
+            (courseProgressCount / SubSectionLength) * 100 * multiplier
           ) / multiplier;
       }
     }

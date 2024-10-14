@@ -14,21 +14,22 @@ require("dotenv").config();
 //capture the payment and initiate the Razorpay order
 exports.capturePayment = async (req, res) => {
   // extract courseId & userId
-  const { coursesId } = req.body;
-  // console.log('coursesId = ', typeof (coursesId))
-  // console.log('coursesId = ', coursesId)
+  const coursesId = req.body;
+  // console.log("coursesId = ", typeof coursesId);
+  // console.log("coursesId = ", coursesId);
 
   const userId = req.user.id;
+  // console.log("user id ->", userId);
 
   //validation
   //check valid courseId
-  if (!coursesId.length == 0) {
+
+  if (!coursesId) {
     return res.json({
       success: false,
       message: "Please provide valid course ID",
     });
   }
-
   //check valid courseDetail
   let totalAmount = 0;
 
@@ -68,7 +69,8 @@ exports.capturePayment = async (req, res) => {
 
   // initiate payment using Razorpay
   try {
-    const paymentResponse = await instance.instance.orders.create(options);
+    // console.log("instance->", instance);
+    const paymentResponse = await instance.orders.create(options);
     // return response
     res.status(200).json({
       success: true,
@@ -212,7 +214,7 @@ const enrollStudents = async (courses, userId, res) => {
           .status(500)
           .json({ success: false, message: "Course not Found" });
       }
-      // console.log("Updated course: ", enrolledCourse)
+      console.log("Updated course: ", enrolledCourse);
 
       // Initialize course preogres with 0 percent
       const courseProgress = await CourseProgress.create({
