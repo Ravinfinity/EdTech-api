@@ -7,7 +7,7 @@ const CourseProgress = require("../models/CourseProgress");
 
 const {
   uploadImageToCloudinary,
-  deleteResourceFromCoudinary,
+  deleteResourceFromCloudinary,
 } = require("../utils/imageUploader");
 const { convertSecondsToDuration } = require("../utils/secToDuration");
 
@@ -151,7 +151,7 @@ exports.createCourse = async (req, res) => {
       data: newCourse,
     });
   } catch (error) {
-    // console.log("Error while creating new course");
+    console.log("Error while creating new course");
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -192,7 +192,7 @@ exports.getAllCourses = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: "Cannot fetch all course data",
+      message: "Cannot fetch all courses data",
       error: error.message,
     });
   }
@@ -276,7 +276,7 @@ exports.getFullCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.body;
     const userId = req.user.id;
-    console.log("courseId userId  = ", courseId, " userId == ", userId);
+    // console.log("courseId userId  = ", courseId, " userId == ", userId);
 
     const courseDetails = await Course.findOne({
       _id: courseId,
@@ -307,7 +307,7 @@ exports.getFullCourseDetails = async (req, res) => {
     if (!courseDetails) {
       return res.status(404).json({
         success: false,
-        message: `Could not find course with id: ${courseId}`,
+        message: `Could not find course with course id: ${courseId}`,
       });
     }
     // if (courseDetails.status === "Draft") {
@@ -469,7 +469,7 @@ exports.deleteCourse = async (req, res) => {
     }
 
     // delete course thumbnail From Cloudinary
-    // await deleteResourceFromCloudinary(course?.thumbnail);
+    await deleteResourceFromCloudinary(course?.thumbnail);
 
     // Delete sections and sub-sections
     const courseSections = course.courseContent;
@@ -477,7 +477,7 @@ exports.deleteCourse = async (req, res) => {
       // Delete sub-sections of the section
       const section = await Section.findById(sectionId);
       if (section) {
-        const subSections = section.subSection;
+        const subSections = section.SubSection;
         for (const subSectionId of subSections) {
           const subSection = await SubSection.findById(subSectionId);
           if (subSection) {

@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      requiredd: true,
+      required: true,
       trim: true,
     },
     password: {
@@ -36,8 +36,8 @@ const userSchema = new mongoose.Schema(
     },
     additionalDetails: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: "Profile",
+      required: true,
     },
     courses: [
       {
@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
     ],
     image: {
       type: String,
-      // required: true,
+      required: true,
     },
     token: {
       type: String,

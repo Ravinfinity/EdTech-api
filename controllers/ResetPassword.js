@@ -65,7 +65,7 @@ exports.resetPassword = async (req, res) => {
     const token =
       req.body?.token ||
       req.cookies?.token ||
-      req.header("Authorization")?.replace("Bearer ", "");
+      req.header("Authorisation")?.replace("Bearer ", "");
 
     const { password, confirmPassword } = req.body;
 

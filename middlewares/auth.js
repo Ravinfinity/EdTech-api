@@ -30,7 +30,7 @@ exports.auth = async (req, res, next) => {
     //verify the token
     try {
       const decode = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("verified decode token => ", decode);
+      // console.log("verified decode token => ", decode);
 
       // *********** example from console ***********
       // verified decode token =>  {
@@ -43,14 +43,14 @@ exports.auth = async (req, res, next) => {
 
       req.user = decode;
     } catch (error) {
-      //verification - issue
+      //verification issue
       console.log("Error while decoding token");
       console.log(error);
 
       return res.status(401).json({
         success: false,
         error: error.message,
-        message: "Token is invalid",
+        message: "Error while decoding token (Token is invalid)",
       });
     }
     //go to next middleware
@@ -58,7 +58,7 @@ exports.auth = async (req, res, next) => {
   } catch (error) {
     console.log("Error while token validating");
     console.log(error);
-    return res.status(401).json({
+    return res.status(500).json({
       success: false,
       message: "Something went wrong while validating the token",
     });

@@ -52,7 +52,7 @@ exports.sendOTP = async (req, res) => {
       .split(".")
       .map((part) => part.replace(/\d+/g, ""))
       .join(" ");
-    console.log(name);
+    // console.log(name);
 
     // send otp in mail
     await mailSender(
@@ -94,8 +94,7 @@ exports.signup = async (req, res) => {
       password,
       confirmPassword,
       accountType,
-      // contactNumber ,
-      contactNumber = "6397618245",
+      contactNumber,
       otp,
     } = req.body;
 
@@ -106,7 +105,7 @@ exports.signup = async (req, res) => {
       !email ||
       !password ||
       !confirmPassword ||
-      // !accountType ||
+      !accountType ||
       !otp
     ) {
       return res.status(403).json({
@@ -177,7 +176,7 @@ exports.signup = async (req, res) => {
     approved === "Instructor" ? (approved = false) : (approved = true);
 
     // create entry in DB
-    const user = await User.create({
+    const userData = await User.create({
       firstName,
       lastName,
       email,
@@ -186,15 +185,16 @@ exports.signup = async (req, res) => {
       additionalDetails: profileDetails._id,
       accountType,
       // accountType: accountType,
-      // approved: approved,
+      approved: approved,
       image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+      oldImage: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
     });
 
     //return res
     return res.status(200).json({
       success: true,
       message: "User Registered Successfully",
-      user,
+      userData,
     });
   } catch (error) {
     console.log("Error while registering user (signup)");
@@ -236,7 +236,7 @@ exports.login = async (req, res) => {
         email: user.email,
         id: user._id,
         accountType: user.accountType,
-        // This will help to check whether user have access to route, while authorization
+        // This will help to check whether user have access to route, while authorisation
       };
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "24h",

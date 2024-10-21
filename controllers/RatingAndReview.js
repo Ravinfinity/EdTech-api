@@ -66,7 +66,7 @@ exports.createRating = async (req, res) => {
       { new: true }
     );
 
-    console.log(updatedCourseDetails);
+    // console.log(updatedCourseDetails);
 
     //return response
     return res.status(200).json({
@@ -154,7 +154,8 @@ exports.getAllRatingReview = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: error.message,
+      error: error.message,
+      message: "Error while fetching all ratings",
     });
   }
 };

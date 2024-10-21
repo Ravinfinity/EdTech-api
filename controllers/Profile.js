@@ -23,32 +23,32 @@ exports.updateProfile = async (req, res) => {
     const {
       dateOfBirth = "",
       about = "",
-      gender,
-      contactNumber,
-      // firstName = await User.findById(userId).firstName,
-      // lastName = await User.findById(userId).lastName,
+      gender = "",
+      contactNumber = "",
+      firstName,
+      lastName,
     } = req.body;
 
     //validation
-    if (!contactNumber || !gender || !userId) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
-    }
+    // if (!contactNumber || !gender || !userId) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "All fields are required",
+    //   });
+    // }
 
     //find profile
     const userDetails = await User.findById(userId);
-    console.log("userDetaiils-> ", userDetails);
+    // console.log("userDetaiils-> ", userDetails);
     const profileId = userDetails.additionalDetails;
     // console.log("profileId-> ", profileId);
     const profileDetails = await Profile.findById(profileId);
     // console.log("profileDetails-> ", profileDetails);
 
-    // // Update the profile fields
-    // userDetails.firstName = firstName;
-    // userDetails.lastName = lastName;
-    // await userDetails.save();
+    // Update the profile fields
+    userDetails.firstName = firstName;
+    userDetails.lastName = lastName;
+    await userDetails.save();
 
     profileDetails.gender = gender;
     profileDetails.dateOfBirth = dateOfBirth;
@@ -61,7 +61,7 @@ exports.updateProfile = async (req, res) => {
     const updatedUserDetails = await User.findById(userId).populate({
       path: "additionalDetails",
     });
-    // console.log('updatedUserDetails -> ', updatedUserDetails);
+    // console.log("updatedUserDetails -> ", updatedUserDetails);
 
     // return response
     res.status(200).json({
@@ -97,13 +97,13 @@ exports.deleteAccount = async (req, res) => {
     }
 
     // delete user profile picture From Cloudinary
-    // await deleteResourceFromCloudinary(userDetails.image);
+    await deleteResourceFromCloudinary(userDetails.image);
 
     // if any student delete their account && enrollded in any course then ,
     // students entrolled in particular course sholud be decreased by one
     // user - courses - studentsEnrolled
     const userEnrolledCoursesId = userDetails.courses;
-    console.log("userEnrolledCourses ids = ", userEnrolledCoursesId);
+    // console.log("userEnrolledCourses ids = ", userEnrolledCoursesId);
 
     for (const courseId of userEnrolledCoursesId) {
       await Course.findByIdAndUpdate(courseId, {
@@ -148,7 +148,8 @@ exports.getUserDetails = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User Data Fetched Successfully",
-      userDetails,
+      data: userDetails,
+      // userDetails
     });
   } catch (error) {
     return res.status(500).json({
@@ -166,9 +167,10 @@ exports.updateUserProfileImage = async (req, res) => {
   try {
     const profileImage = req.files?.profileImage;
     const userId = req.user.id;
+    // console.log("req body->", req.user.id);
 
     // validation
-    console.log("profileImage = ", profileImage);
+    // console.log("profileImage = ", profileImage);
 
     // upload image to cloudinary
     const image = await uploadImageToCloudinary(

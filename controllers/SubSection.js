@@ -10,7 +10,7 @@ exports.createSubSection = async (req, res) => {
 
     //extract file/video
     const videoFile = req.files?.videoFile;
-    console.log("videoFile ", videoFile);
+    // console.log("videoFile ", videoFile);
 
     //validation
     if (!sectionId || !title || !description || !videoFile) {
@@ -141,7 +141,7 @@ exports.deleteSubSection = async (req, res) => {
     // delete from DB
     const subSection = await SubSection.findByIdAndDelete(subSectionId);
 
-    console.log(subSection);
+    // console.log(subSection);
 
     if (!subSection) {
       return res
@@ -166,7 +166,6 @@ exports.deleteSubSection = async (req, res) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-
       error: error.message,
       message: "An error occurred while deleting the SubSection",
     });

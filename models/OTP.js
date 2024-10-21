@@ -14,7 +14,7 @@ const otpSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
     expired: 3 * 60,
-    // The document will be automatically deleted after 3 minutes of its creation time
+    // The document(here otp) will be automatically deleted after 3 minutes of its creation time
   },
 });
 
@@ -27,7 +27,7 @@ async function sendVerificationEmail(email, otp) {
       otp
     );
     console.log("Email sent Successfully to ", email);
-    console.log(mailResponse);
+    // console.log(mailResponse);
   } catch (error) {
     console.log("Error occurred while sending email to", email);
     console.log(error);
